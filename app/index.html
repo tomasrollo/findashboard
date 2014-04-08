@@ -1,0 +1,78 @@
+<!doctype html>
+<!--[if lt IE 7]>	  <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>		 <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>		 <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>Financial dashboard</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<!-- build:css(.tmp) styles/main.css -->
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+		<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">
+		<link rel="stylesheet" href="styles/main.css">
+		<!-- endbuild -->
+		<!-- build:js scripts/vendor/modernizr.js -->
+		<script src="bower_components/modernizr/modernizr.js"></script>
+		<!-- endbuild -->
+	</head>
+	<body>
+		<!--[if lt IE 10]>
+			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+		<![endif]-->
+
+		<div class="container">
+			<!-- Nav tabs -->
+			<ul class="nav nav-pills" id="navigation">
+				<li class="active"><a href="#home" data-toggle="pill">Home</a></li>
+				<li><a href="#accountbalance" data-toggle="pill">Accounts balance</a></li>
+				<li><a href="#incomeexpense" data-toggle="pill">Incomes &amp; Expenses</a></li>
+				<li><a href="#categoryspend" data-toggle="pill">Split per category</a></li>
+			</ul>
+			
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane active" id="home">
+				</div>
+				<div class="tab-pane" id="accountbalance">
+					<div id="accountbalanceChart" style="width:100%; height:600px;"></div>
+				</div>
+				<div class="tab-pane" id="incomeexpense">
+					<div id="incomeexpenseChart" style="width:100%; height:600px;"></div>
+					<div id="incomeexpenseAccountChart" style="width:100%; height:600px;"></div>
+				</div>
+				<div class="tab-pane" id="categoryspend">
+					<div id="categoryspendexpenseChart" style="width:100%; height:600px;"></div>
+					<div id="categoryspendincomeChart" style="width:100%; height:600px;"></div>
+				</div>
+			</div>
+		</div>
+		<!-- build:js scripts/vendor.js -->
+		<script src="bower_components/jquery/jquery.js"></script>
+		<script src="bower_components/underscore/underscore.js"></script>
+		<script src="bower_components/backbone/backbone.js"></script>
+		<!-- endbuild -->
+
+		<!-- build:js scripts/plugins.js -->
+		<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="bower_components/highcharts.com/js/highstock.src.js"></script>
+		<script src="bower_components/tabletop/src/tabletop.js"></script>
+		<!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/main.js -->
+        <script src="scripts/SQLikeSource.js"></script>
+        <script src="scripts/main.js"></script>
+        <script src="scripts/templates.js"></script>
+        <script src="scripts/rawData.js"></script>
+        <script src="scripts/transactions.js"></script>
+        <script src="scripts/views/accountbalance.js"></script>
+        <script src="scripts/views/incomeexpense.js"></script>
+        <script src="scripts/views/navigation.js"></script>
+        <script src="scripts/views/categoryspend.js"></script>
+        <script src="scripts/views/home.js"></script>
+        <!-- endbuild -->
+</body>
+</html>
