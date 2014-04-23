@@ -1,0 +1,31 @@
+<div class="row clearfix">
+	<div class="col-md-8 column">
+		<div class="btn-group btn-group-sm">
+			 <button class="btn btn-default">Show</button><button data-toggle="dropdown" class="btn btn-default dropdown-toggle"><span class="caret"></span></button>
+			<ul class="dropdown-menu">
+				<li><a href="#" class="showLast3m">Last 3 months</a></li>
+				<li><a href="#" class="showLast6m">Last 6 months</a></li>
+				<li><a href="#" class="showLast12m">Last 12 months</a></li>
+				<li><a href="#" class="showYTD">YTD</a></li>
+				<li class="divider"></li>
+				<li><a href="#" class="showYear2012">Year 2012</a></li>
+				<li><a href="#" class="showYear2013">Year 2013</a></li>
+				<li><a href="#" class="showYear2014">Year 2014</a></li>
+			</ul>
+		</div>
+		<div class="btn-group btn-group-sm">
+			<button class="btn btn-default shiftLeft3m" type="button">-3m</button>
+			<button class="btn btn-default shiftLeft1m" type="button">-1m</button>
+			<button class="btn btn-default shiftRight1m" type="button">+1m</button>
+			<button class="btn btn-default shiftRight3m" type="button">+3m</button>
+		</div>
+	</div>
+	<div class="col-md-4 column text-right">
+		<span>Toggle series: </span>
+		<div class="btn-group btn-group-sm">
+			<button class="btn btn-default showAllSeries" type="button">All</button>
+			<button class="btn btn-default hideAllSeries" type="button">None</button>
+		</div>
+	</div>
+</div>
+<div class="chart" style="width:100%; height:600px;"></div>

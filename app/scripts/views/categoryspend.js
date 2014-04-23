@@ -16,6 +16,8 @@ findashboard.Views = findashboard.Views || {};
 
 		events: {
 			'tab_shown': 'show',
+			'click .showAllSeries': 'showAllSeries',
+			'click .hideAllSeries': 'hideAllSeries',
 		},
 		
 		initialize: function() {
@@ -23,6 +25,22 @@ findashboard.Views = findashboard.Views || {};
 		
 		show: function() {
 			if (!this.rendered) this.render();
+		},
+		toggleSeries: function(action) {
+			if (!this.chart1) return;
+			_(this.chart1.series).each(function(serie) {
+				console.log('Processing serie '+serie.name);
+				serie.setVisible(action === 'show', false);
+			});
+			this.chart1.redraw();
+		},
+		showAllSeries: function() {
+			console.log('showing all series');
+			this.toggleSeries('show');
+		},
+		hideAllSeries: function() {
+			console.log('hiding all series');
+			this.toggleSeries('hide');
 		},
 		
 		render: function() {
@@ -108,7 +126,7 @@ findashboard.Views = findashboard.Views || {};
 				},
 				series: constructSeries(expenses, fd.data.mainCategories),
 			});
-			this.chart1 = new Highcharts.Chart({
+			this.chart2 = new Highcharts.Chart({
 				chart: {
 					type: 'areaspline',
 					renderTo: $('#categoryspendincomeChart').get(0),

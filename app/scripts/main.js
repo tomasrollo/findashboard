@@ -20,15 +20,34 @@ window.fd = window.findashboard = {
 			el: '#accountbalance'
 		});
 		this.incomeexpenseView = new this.Views.IncomeexpenseView({
-			el: '#incomeexpense'
+			el: '#incomeexpenseView'
 		});
-		this.incomeexpenseView = new this.Views.CategoryspendView({
-			el: '#categoryspend'
+		this.paincomeexpenseView = new this.Views.PaincomeexpenseView({
+			el: '#paincomeexpenseView'
 		});
-		
+
+		fd.data.initialize();
 		fd.data.loadData();
 	}
 };
+
+var DEBUG_VENT = true;
+var DEBUG_RESULT = true;
+
+window.fd.debug = function(name) {
+	return function() {
+		if (DEBUG_VENT) console.log(name+' '+arguments[0], Array.prototype.slice.apply(arguments, [1]));
+	};
+};
+
+window.fd.vent = _.extend({}, Backbone.Events);
+window.fd.vent.on('all', window.fd.debug("fd.vent")); // log all events by default
+window.fd.vent.setupTrigger = function(name) {
+	return function(eventName) {
+		window.fd.vent.trigger.apply(window.fd.vent, _.flatten([name+':'+eventName, Array.prototype.slice.apply(arguments, [1])]));
+	};
+};
+
 
 $(document).ready(function () {
 	'use strict';

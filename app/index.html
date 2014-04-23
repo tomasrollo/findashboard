@@ -44,15 +44,14 @@
 					<div id="accountbalanceChart" style="width:100%; height:600px;"></div>
 				</div>
 				<div class="tab-pane" id="incomeexpense">
-					<div id="incomeexpenseChart" style="width:100%; height:600px;"></div>
-					<div id="incomeexpenseAccountChart" style="width:100%; height:600px;"></div>
+					<div id="incomeexpenseView"></div>
+					<div id="paincomeexpenseView"></div>
 				</div>
 				<div class="tab-pane" id="categoryspend">
-					<div id="categoryspendexpenseChart" style="width:100%; height:600px;"></div>
-					<div id="categoryspendincomeChart" style="width:100%; height:600px;"></div>
 				</div>
 			</div>
 		</div>
+
 		<!-- build:js scripts/vendor.js -->
 		<script src="bower_components/jquery/jquery.js"></script>
 		<script src="bower_components/underscore/underscore.js"></script>
@@ -71,11 +70,13 @@
         <script src="scripts/templates.js"></script>
         <script src="scripts/rawData.js"></script>
         <script src="scripts/transactions.js"></script>
-        <script src="scripts/views/accountbalance.js"></script>
-        <script src="scripts/views/incomeexpense.js"></script>
-        <script src="scripts/views/navigation.js"></script>
-        <script src="scripts/views/categoryspend.js"></script>
+        <script src="scripts/views/abstractchart.js"></script>
         <script src="scripts/views/home.js"></script>
+        <script src="scripts/views/navigation.js"></script>
+        <script src="scripts/views/accountbalance.js"></script>
+        <script src="scripts/views/categoryspend.js"></script>
+        <script src="scripts/views/incomeexpense.js"></script>
+        <script src="scripts/views/paincomeexpense.js"></script>
         <!-- endbuild -->
 </body>
 </html>

@@ -13,8 +13,8 @@ findashboard.Views = findashboard.Views || {};
 			
 		},
 		initialize: function() {
-			this.listenTo(fd.data, 'load:start', function() {this.log('Loading data')});
-			this.listenTo(fd.data, 'load:end', function() {this.log('Data loaded')});
+			this.listenTo(fd.vent, 'data:load_start', function() {this.log('Loading data')});
+			this.listenTo(fd.vent, 'data:load_end', function() {this.log('Data loaded')});
 		},
 		log: function(message) {
 			this.$el.append('<p>'+message+'</p>');

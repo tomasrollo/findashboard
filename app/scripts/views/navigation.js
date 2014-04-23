@@ -10,9 +10,10 @@ findashboard.Views = findashboard.Views || {};
 		template: JST['app/scripts/templates/navigation.ejs'],
 		
 		initialize: function() {
+			var self = this;
+			this.on('all', fd.vent.setupTrigger('navigation'));
 			$('#navigation a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-				// console.log($(e.target).attr('href'));
-				$($(e.target).attr('href')).trigger('tab_shown'); // activated tab
+				self.trigger('tab_shown', $(e.target).attr('href'));
 			});
 		}
 
