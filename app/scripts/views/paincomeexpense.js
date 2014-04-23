@@ -85,7 +85,7 @@ findashboard.Views = findashboard.Views || {};
 			return this;
         },
 
-		updateChartData: function(months) {
+		updateChartData: function() {
 			
 			var incomes = SQLike.q({
 				select: [
@@ -93,7 +93,7 @@ findashboard.Views = findashboard.Views || {};
 					function() { return this.t2_account; },'|as|','account',
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
-				from: {t1: months},
+				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
 				leftjoin: {t2: fd.data.incomes},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
@@ -105,13 +105,13 @@ findashboard.Views = findashboard.Views || {};
 					function() { return this.t2_account; },'|as|','account',
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
-				from: {t1: months},
+				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
 				leftjoin: {t2: fd.data.expenses},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
 			console.table(expenses);
 			
-			this.chart.xAxis[0].setCategories(_(months).pluck('yearMonth'), false);
+			this.chart.xAxis[0].setCategories(this.monthsShown, false);
 			this.chart.series[0].setData(_(incomes).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
 			this.chart.series[1].setData(_(incomes).chain().where({'account': 'ING'}).pluck('sum_amount').value(), false, false, false);
 			this.chart.series[2].setData(_(incomes).chain().where({'account': 'Iri KB'}).pluck('sum_amount').value(), false, false, false);

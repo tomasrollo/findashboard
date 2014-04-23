@@ -63,51 +63,50 @@ findashboard.Views = findashboard.Views || {};
 				return this;
 			}
 			
-			var months = [];
+			this.monthsShown = [];
 			if (viewType == 'last') {
 				var firstMonthIndex = 0;
 				var lastMonthIndex = 0;
 				// get the index of the current month in the list of months
-				lastMonthIndex = _(fd.data.months).pluck('yearMonth').indexOf(fd.data.currentMonth);
+				lastMonthIndex = fd.data.months.indexOf(fd.data.currentMonth);
 				if (lastMonthIndex === -1) { // not found, such data not in the list
 					lastMonthIndex = fd.data.months.length-1; // take the last element then
 				}
 				lastMonthIndex += 1; // adjust slightly so we're taking the last month in later in the slice
 				firstMonthIndex = (lastMonthIndex - viewLength < 0 ? 0 : lastMonthIndex - viewLength);
 				// console.log('firstMonthIndex='+firstMonthIndex+', lastMonthIndex='+lastMonthIndex);
-				months = fd.data.months.slice(firstMonthIndex, lastMonthIndex);
+				this.monthsShown = fd.data.months.slice(firstMonthIndex, lastMonthIndex);
 			}
 			if (viewType == 'ytd') {
 				// get the index of the current month in the list of months
 				var lastMonth;
-				if (_(fd.data.months).pluck('yearMonth').indexOf(fd.data.currentMonth) === -1) { // not found, such data not in the list
-					lastMonth = fd.data.months[fd.data.months.length-1].yearMonth; // take the last element then
+				if (fd.data.months.indexOf(fd.data.currentMonth) === -1) { // not found, such data not in the list
+					lastMonth = fd.data.months[fd.data.months.length-1]; // take the last element then
 				} else {
 					lastMonth = fd.data.currentMonth;
 				}
 				var chunks = lastMonth.split('-');
 				var year = chunks[0];
 				var month = parseInt(chunks[1]); // get just the month part
-				months = _(fd.data.months).filter(function(el) {
-					var chunks = el.yearMonth.split('-');
+				this.monthsShown = _(fd.data.months).filter(function(ym) {
+					var chunks = ym.split('-');
 					return chunks[0] == year && parseInt(chunks[1]) <= month;
 				});
 			}
 			if (viewType == 'year') {
-				months = _(fd.data.months).filter(function(el) {
-					return el.yearMonth.split('-')[0] == viewLength.toString();
+				this.monthsShown = _(fd.data.months).filter(function(ym) {
+					return ym.split('-')[0] == viewLength.toString(); // the viewLength parameter bears the year number in this case
 				});
 			}
-			this.monthsShown = months;
-			if (months.length === 0) {
+			if (this.monthsShown.length === 0) {
 				alert('There are no data from this period');
 				console.log('No months is scope, not doing anything');
 				return;
 			}
-			console.log('Setting chart views to show months '+(_(months).pluck('yearMonth')).join(', '));
+			console.log('Setting chart views to show months '+this.monthsShown.join(', '));
 			
 			// now update the chart
-			this.updateChartData(months);
+			this.updateChartData();
 		},
 		
 		moveChartView: function(delta) {

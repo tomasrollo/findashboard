@@ -264,14 +264,14 @@ findashboard.Views = findashboard.Views || {};
 			});
 		},
 		
-		updateChartData: function(months) {
+		updateChartData: function() {
 			
 			var overallIncomes = SQLike.q({
 				select: [
 					function() { return this.t1_yearMonth; },'|as|','yearMonth',
 					function() { return this.t2_sum_sum_amount; },'|as|','sum_amount',
 				],
-				from: {t1: months},
+				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
 				leftjoin: {t2: this.overallIncomes},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
@@ -282,13 +282,13 @@ findashboard.Views = findashboard.Views || {};
 					function() { return this.t1_yearMonth; },'|as|','yearMonth',
 					function() { return this.t2_sum_sum_amount; },'|as|','sum_amount',
 				],
-				from: {t1: months},
+				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
 				leftjoin: {t2: this.overallExpenses},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
 			console.table(overallExpenses);
 			
-			this.chart.xAxis[0].setCategories(_(months).pluck('yearMonth'), false);
+			this.chart.xAxis[0].setCategories(this.monthsShown, false);
 			this.chart.series[0].setData(_(overallIncomes).pluck('sum_amount'), false, false, false);
 			this.chart.series[1].setData(_(overallExpenses).pluck('sum_amount'), false, false, false);
 			this.chart.redraw();
