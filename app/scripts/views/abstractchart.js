@@ -42,19 +42,20 @@ findashboard.Views = findashboard.Views || {};
 		show: function(tabName) {
 			if (tabName != '#'+this.tabName) return; // pass on tabs that are not mine
 			if (!this.chart) this.render();
+			if (!this.monthsShown.length) this.setChartView('ytd'); // set default chart view initially
 		},
 		
-		showLast3m: function() { this.setChartView('last', 3); },
-		showLast6m: function() { this.setChartView('last', 6); },
-		showLast12m: function() { this.setChartView('last', 12); },
-		showYTD: function() { this.setChartView('ytd'); },
-		showYear2012: function() { this.setChartView('year', 2012); },
-		showYear2013: function() { this.setChartView('year', 2013); },
-		showYear2014: function() { this.setChartView('year', 2014); },
-		shiftLeft3m: function() { this.moveChartView(-3); },
-		shiftLeft1m: function() { this.moveChartView(-1); },
-		shiftRight1m: function() { this.moveChartView(1); },
-		shiftRight3m: function() { this.moveChartView(3); },
+		showLast3m: function(e) { this.setChartView('last', 3); e.preventDefault(); },
+		showLast6m: function(e) { this.setChartView('last', 6); e.preventDefault(); },
+		showLast12m: function(e) { this.setChartView('last', 12); e.preventDefault(); },
+		showYTD: function(e) { this.setChartView('ytd'); e.preventDefault(); },
+		showYear2012: function(e) { this.setChartView('year', 2012); e.preventDefault(); },
+		showYear2013: function(e) { this.setChartView('year', 2013); e.preventDefault(); },
+		showYear2014: function(e) { this.setChartView('year', 2014); e.preventDefault(); },
+		shiftLeft3m: function(e) { this.moveChartView(-3); e.preventDefault(); },
+		shiftLeft1m: function(e) { this.moveChartView(-1); e.preventDefault(); },
+		shiftRight1m: function(e) { this.moveChartView(1); e.preventDefault(); },
+		shiftRight3m: function(e) { this.moveChartView(3); e.preventDefault(); },
 		
 		setChartView: function(viewType, viewLength) {
 			console.log('Setting chart view to '+viewType);
