@@ -10,18 +10,13 @@ findashboard.Views = findashboard.Views || {};
 		template: JST['app/scripts/templates/accountbalance.ejs'],
 		
 		chart: null,
-		
-		rendered: false,
 
-		events: {
-			'tab_shown': 'show',
-		},
-		
 		initialize: function() {
+			this.listenTo(fd.vent, 'navigation:tab_shown', this.show);
 		},
 		
 		show: function() {
-			if (!this.rendered) this.render();
+			if (!this.chart) this.render();
 		},
 		
 		render: function() {
@@ -29,6 +24,9 @@ findashboard.Views = findashboard.Views || {};
 				console.log('Skipping render as no data is available');
 				return this;
 			}
+			
+			console.log('Rendering chart');
+			this.$el.append(this.template());
 			
 			function pluckDataForAccount(data, account) {
 				return _(data).chain().where({'t1_account':account}).map(function(pos) { return [pos.t1_date, pos.sum_amount]; }).value();
@@ -55,21 +53,28 @@ findashboard.Views = findashboard.Views || {};
 				orderby: ['t1_date','t1_account'],
 			});
 			var tmpBal = _(fd.data.accounts).reduce(function(memo, account) { memo[account.account] = 0; return memo;}, {});
-			_(balances).each(function(pos, index, b) {
+			_(balances).each(function(pos, index, b) { // roll the balance over time (per each account)
 				b[index].sum_amount = tmpBal[pos.t1_account] = tmpBal[pos.t1_account] + pos.sum_amount;
 				b[index].t1_date = new Date(b[index].t1_date).getTime();
+			});
+			var totalNetWorth = SQLike.q({
+				select: ['t1_date','|sum|','sum_amount'],
+				from: balances,
+				groupby: ['t1_date'],
+				orderby: ['t1_date'],
 			});
 
 			this.chart = new Highcharts.StockChart({
 				chart: {
 					type: 'line',
-					renderTo: $('#accountbalanceChart').get(0),
+					renderTo: this.$el.find('.chart').get(0),
 				},
 				colors: [
 					'#D9F041', // Cash
 					'#19F700', // ING
 					'#F04152', // Iri KB
 					'#4741F0', // Tomas KB
+					'#000000', // Total net worth
 				],
 				rangeSelector: {
 					selected: 1,
@@ -83,27 +88,38 @@ findashboard.Views = findashboard.Views || {};
 						text: 'CZK',
 					},
 				},
+				legend: {
+					enabled: true,
+				},
 				series: [
 					{
 						name: 'Cash balance',
 						data: pluckDataForAccount(balances, 'Cash'),
+						type: 'spline',
 					},
 					{
 						name: 'ING balance',
 						data: pluckDataForAccount(balances, 'ING'),
+						type: 'spline',
 					},
 					{
 						name: 'Iri KB balance',
 						data: pluckDataForAccount(balances, 'Iri KB'),
+						type: 'spline',
 					},
 					{
 						name: 'Tomas KB balance',
 						data: pluckDataForAccount(balances, 'Tomas KB'),
+						type: 'spline',
+					},
+					{
+						name: 'Total net worth',
+						data: _(totalNetWorth).map(function(pos) { return [pos.t1_date, pos.sum_sum_amount]; }),
+						type: 'spline',
 					},
 				],
 			});
 			
-			this.rendered = true;
 			return this;
 		},
 
