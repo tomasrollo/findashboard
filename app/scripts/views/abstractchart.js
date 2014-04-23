@@ -115,6 +115,18 @@ findashboard.Views = findashboard.Views || {};
 				console.log('Skipping as no data is available');
 				return;
 			}
+			var startMonth = this.monthsShown[0];
+			var startMonthIndex = fd.data.months.indexOf(startMonth);
+			console.log(startMonthIndex);
+			if (startMonthIndex === -1) throw new Error('Unexpected - startMonth '+startMonth+' not found in fd.data.months');
+			if (startMonthIndex + delta < 0) startMonthIndex = 0; // don't go past start of available data
+			else if (startMonthIndex + this.monthsShown.length + delta >= fd.data.months.length) startMonthIndex = fd.data.months.length - this.monthsShown.length;
+			else startMonthIndex += delta;
+			this.monthsShown = fd.data.months.slice(startMonthIndex, startMonthIndex + this.monthsShown.length);
+			console.log('Showing months: '+this.monthsShown.join(', '));
+			
+			// now update the chart
+			this.updateChartData();
 		},
 		
 		toggleSeries: function(action) {
