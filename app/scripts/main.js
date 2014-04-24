@@ -25,6 +25,12 @@ window.fd = window.findashboard = {
 		this.paincomeexpenseView = new this.Views.PaincomeexpenseView({
 			el: '#paincomeexpenseView'
 		});
+		this.categoryspendView = new this.Views.CategoryspendView({
+			el: '#categoryspendView'
+		});
+		this.categoryincomeView = new this.Views.CategoryincomeView({
+			el: '#categoryincomeView'
+		});
 
 		fd.data.initialize();
 		fd.data.loadData();

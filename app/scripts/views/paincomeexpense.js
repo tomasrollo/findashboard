@@ -94,10 +94,10 @@ findashboard.Views = findashboard.Views || {};
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
 				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
-				leftjoin: {t2: fd.data.incomes},
+				leftjoin: {t2: fd.data.incomesPerYmA},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			console.table(incomes);
+			// console.table(incomes);
 			
 			var expenses = SQLike.q({
 				select: [
@@ -106,10 +106,10 @@ findashboard.Views = findashboard.Views || {};
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
 				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
-				leftjoin: {t2: fd.data.expenses},
+				leftjoin: {t2: fd.data.expensesPerYmA},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			console.table(expenses);
+			// console.table(expenses);
 			
 			this.chart.xAxis[0].setCategories(this.monthsShown, false);
 			this.chart.series[0].setData(_(incomes).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
