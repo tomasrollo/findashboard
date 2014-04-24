@@ -5,81 +5,34 @@ findashboard.Views = findashboard.Views || {};
 (function () {
     'use strict';
 
-    findashboard.Views.PaincomeexpenseView = findashboard.Views.AbstractchartView.extend({
+    findashboard.Views.CategoryincomeView = findashboard.Views.AbstractchartView.extend({
 
-        tabName: 'incomeexpense',
+        tabName: 'percategory',
         
         render: function() {
-			console.log('Rendering PaincomeexpenseView');
+			console.log('Rendering CategoryincomeView');
 			
 			findashboard.Views.AbstractchartView.prototype.render.apply(this);
 			
 			this.chart = new Highcharts.Chart({
 				chart: {
-					type: 'column',
+					type: 'areaspline',
 					renderTo: this.$el.find('.chart').get(0),
 				},
-				colors: [
-					'#D9F041', // Cash
-					'#19F700', // ING
-					'#F04152', // Iri KB
-					'#4741F0', // Tomas KB
-				],
 				plotOptions: {
-					column: {
+					areaspline: {
 						stacking: 'normal'
 					}
 				},
 				title: {
-					text: 'Account monthly incomes and expenses',
+					text: 'Incomes per category',
 				},
 				yAxis: {
 					title: {
 						text: 'CZK',
 					},
 				},
-				series: [
-					{
-						name: 'Cash income',
-						data: [],
-						stack: 'incomes',
-					},
-					{
-						name: 'ING income',
-						data: [],
-						stack: 'incomes',
-					},
-					{
-						name: 'Iri KB income',
-						data: [],
-						stack: 'incomes',
-					},
-					{
-						name: 'Tomas KB income',
-						data: [],
-						stack: 'incomes',
-					},
-					{
-						name: 'Cash expense',
-						data: [],
-						stack: 'expenses',
-					},
-					{
-						name: 'ING expense',
-						data: [],
-						stack: 'expenses',
-					},
-					{
-						name: 'Iri KB expense',
-						data: [],
-						stack: 'expenses',
-					},
-					{
-						name: 'Tomas KB expense',
-						data: [],
-						stack: 'expenses',
-					},
-				],
+				series: _(fd.data.mainCategories).map(function(cat) { return {name: cat.mainCategory, data: []}; }),
 			});
 
 			return this;
@@ -87,29 +40,17 @@ findashboard.Views = findashboard.Views || {};
 
 		updateChartData: function() {
 			
-			var incomes = SQLike.q({
-				select: [
-					function() { return this.t1_yearMonth; },'|as|','yearMonth',
-					function() { return this.t2_account; },'|as|','account',
-					function() { return this.t2_sum_amount; },'|as|','sum_amount',
-				],
-				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
-				leftjoin: {t2: fd.data.incomesPerYmA},
-				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
-			});
-			// console.table(incomes);
-			
 			var expenses = SQLike.q({
 				select: [
 					function() { return this.t1_yearMonth; },'|as|','yearMonth',
-					function() { return this.t2_account; },'|as|','account',
+					function() { return this.t2_mainCategory; },'|as|','mainCategory',
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
 				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
-				leftjoin: {t2: fd.data.expensesPerYmA},
+				leftjoin: {t2: fd.data.expensesPerYmC},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			// console.table(expenses);
+			console.table(expenses);
 			
 			this.chart.xAxis[0].setCategories(this.monthsShown, false);
 			this.chart.series[0].setData(_(incomes).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);

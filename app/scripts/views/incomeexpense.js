@@ -56,12 +56,12 @@ findashboard.Views = findashboard.Views || {};
 		precomputeData: function() {
 			this.overallExpenses = SQLike.q({
 				select: ['yearMonth','|sum|','sum_amount'],
-				from: fd.data.expenses,
+				from: fd.data.expensesPerYmA,
 				groupby: ['yearMonth'],
 			});
 			this.overallIncomes = SQLike.q({
 				select: ['yearMonth','|sum|','sum_amount'],
-				from: fd.data.incomes,
+				from: fd.data.incomesPerYmA,
 				groupby: ['yearMonth'],
 			});
 		},
@@ -77,7 +77,7 @@ findashboard.Views = findashboard.Views || {};
 				leftjoin: {t2: this.overallIncomes},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			console.table(overallIncomes);
+			// console.table(overallIncomes);
 			
 			var overallExpenses = SQLike.q({
 				select: [
@@ -88,7 +88,7 @@ findashboard.Views = findashboard.Views || {};
 				leftjoin: {t2: this.overallExpenses},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			console.table(overallExpenses);
+			// console.table(overallExpenses);
 			
 			this.chart.xAxis[0].setCategories(this.monthsShown, false);
 			this.chart.series[0].setData(_(overallIncomes).pluck('sum_amount'), false, false, false);

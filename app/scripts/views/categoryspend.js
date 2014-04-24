@@ -5,108 +5,19 @@ findashboard.Views = findashboard.Views || {};
 (function () {
     'use strict';
 
-    findashboard.Views.CategoryspendView = Backbone.View.extend({
+    findashboard.Views.CategoryspendView = findashboard.Views.AbstractchartView.extend({
 
-        template: JST['app/scripts/templates/categoryspend.ejs'],
+        tabName: 'percategory',
         
-		chart1: null,
-		chart2: null,
-		
-		rendered: false,
-
-		events: {
-			'tab_shown': 'show',
-			'click .showAllSeries': 'showAllSeries',
-			'click .hideAllSeries': 'hideAllSeries',
-		},
-		
-		initialize: function() {
-		},
-		
-		show: function() {
-			if (!this.rendered) this.render();
-		},
-		toggleSeries: function(action) {
-			if (!this.chart1) return;
-			_(this.chart1.series).each(function(serie) {
-				console.log('Processing serie '+serie.name);
-				serie.setVisible(action === 'show', false);
-			});
-			this.chart1.redraw();
-		},
-		showAllSeries: function() {
-			console.log('showing all series');
-			this.toggleSeries('show');
-		},
-		hideAllSeries: function() {
-			console.log('hiding all series');
-			this.toggleSeries('hide');
-		},
-		
-		render: function() {
-			if (!fd.data.dataAvailable) {
-				console.log('Skipping render as no data is available');
-				return this;
-			}
+        render: function() {
+			console.log('Rendering CategoryspendView');
 			
-			function pluckDataForCategory(data, category) {
-				return _(data).chain().where({'t1_mainCategory':category}).pluck('sum_amount').value();
-			}
+			findashboard.Views.AbstractchartView.prototype.render.apply(this);
 			
-			var basis = SQLike.q({ // get all combinations of dates and main categories
-				select: [function() { return this.t1_yearMonth; },'|as|','yearMonth', function() { return this.t2_mainCategory; },'|as|','mainCategory'],
-				from: {t1:fd.data.months},
-				join: {t2:fd.data.mainCategories},
-				on: function() {return true;}
-			});
-
-			var expenses = SQLike.q({
-				select: ['yearMonth','mainCategory','|sum|','amount'],
-				from: fd.data.transactions,
-				where: function() { return this.amount < 0 && this.transfers === ""; },
-				groupby: ['yearMonth','mainCategory'],
-				orderby: ['yearMonth','mainCategory'],
-			});
-			expenses = SQLike.q({
-				select: ['t1_yearMonth','t1_mainCategory',function() { return this.t2_sum_amount === undefined ? 0 : Math.abs(this.t2_sum_amount)},'|as|','sum_amount'],
-				from: {t1: basis},
-				leftjoin: {t2: expenses},
-				on: function() { return this.t1.yearMonth == this.t2.yearMonth && this.t1.mainCategory == this.t2.mainCategory; },
-				orderby: ['t1_yearMonth','t1_mainCategory'],
-			});
-
-			var incomes = SQLike.q({
-				select: ['yearMonth','mainCategory','|sum|','amount'],
-				from: fd.data.transactions,
-				where: function() { return this.amount > 0 && this.transfers === ""; },
-				groupby: ['yearMonth','mainCategory'],
-				orderby: ['yearMonth','mainCategory'],
-			});
-			incomes = SQLike.q({
-				select: ['t1_yearMonth','t1_mainCategory',function() { return this.t2_sum_amount === undefined ? 0 : Math.abs(this.t2_sum_amount)},'|as|','sum_amount'],
-				from: {t1: basis},
-				leftjoin: {t2: incomes},
-				on: function() { return this.t1.yearMonth == this.t2.yearMonth && this.t1.mainCategory == this.t2.mainCategory; },
-				orderby: ['t1_yearMonth','t1_mainCategory'],
-			});
-
-			function constructSeries(data, categories) {
-				var series = [];
-				var values;
-				_(categories).each(function(category) {
-					values = pluckDataForCategory(data, category.mainCategory);
-					if (_(values).any(function(value) { return value !== 0; })) series.push({
-						name: category.mainCategory,
-						data: values,
-					});
-				});
-				return series;
-			}
-			
-			this.chart1 = new Highcharts.Chart({
+			this.chart = new Highcharts.Chart({
 				chart: {
 					type: 'areaspline',
-					renderTo: $('#categoryspendexpenseChart').get(0),
+					renderTo: this.$el.find('.chart').get(0),
 				},
 				plotOptions: {
 					areaspline: {
@@ -116,44 +27,42 @@ findashboard.Views = findashboard.Views || {};
 				title: {
 					text: 'Expenses per category',
 				},
-				xAxis: {
-					categories: _(fd.data.months).pluck('yearMonth'),
-				},
 				yAxis: {
 					title: {
 						text: 'CZK',
 					},
 				},
-				series: constructSeries(expenses, fd.data.mainCategories),
-			});
-			this.chart2 = new Highcharts.Chart({
-				chart: {
-					type: 'areaspline',
-					renderTo: $('#categoryspendincomeChart').get(0),
-				},
-				plotOptions: {
-					areaspline: {
-						stacking: 'normal'
-					}
-				},
-				title: {
-					text: 'Incomes per category',
-				},
-				xAxis: {
-					categories: _(fd.data.months).pluck('yearMonth'),
-				},
-				yAxis: {
-					title: {
-						text: 'CZK',
-					},
-				},
-				series: constructSeries(incomes, fd.data.mainCategories),
+				series: _(fd.data.mainCategories).map(function(cat) { return {name: cat.mainCategory, data: []}; }),
 			});
 
-			this.rendered = true;
 			return this;
-		},
+        },
 
+		updateChartData: function() {
+			
+			var incomes = SQLike.q({
+				select: [
+					function() { return this.t1_yearMonth; },'|as|','yearMonth',
+					function() { return this.t2_mainCategory; },'|as|','mainCategory',
+					function() { return this.t2_sum_amount; },'|as|','sum_amount',
+				],
+				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
+				leftjoin: {t2: fd.data.incomesPerYmC},
+				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
+			});
+			console.table(incomes);
+			
+			this.chart.xAxis[0].setCategories(this.monthsShown, false);
+			this.chart.series[0].setData(_(incomes).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[1].setData(_(incomes).chain().where({'account': 'ING'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[2].setData(_(incomes).chain().where({'account': 'Iri KB'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[3].setData(_(incomes).chain().where({'account': 'Tomas KB'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[4].setData(_(expenses).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[5].setData(_(expenses).chain().where({'account': 'ING'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[6].setData(_(expenses).chain().where({'account': 'Iri KB'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.series[7].setData(_(expenses).chain().where({'account': 'Tomas KB'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.redraw();
+		}
     });
 
 })();
