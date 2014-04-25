@@ -32,7 +32,7 @@ findashboard.Views = findashboard.Views || {};
 						text: 'CZK',
 					},
 				},
-				series: _(fd.data.mainCategories).map(function(cat) { return {name: cat.mainCategory, data: []}; }),
+				series: _(fd.data.MCtotalIn).map(function(cat) { return {name: cat.mainCategory, data: []}; }),
 			});
 
 			return this;
@@ -40,27 +40,24 @@ findashboard.Views = findashboard.Views || {};
 
 		updateChartData: function() {
 			
-			var expenses = SQLike.q({
+			var incomes = SQLike.q({
 				select: [
 					function() { return this.t1_yearMonth; },'|as|','yearMonth',
 					function() { return this.t2_mainCategory; },'|as|','mainCategory',
 					function() { return this.t2_sum_amount; },'|as|','sum_amount',
 				],
 				from: {t1: fd.util.pack('yearMonth', this.monthsShown)},
-				leftjoin: {t2: fd.data.expensesPerYmC},
+				leftjoin: {t2: fd.data.incomesPerYmC},
 				on: function() { return this.t1.yearMonth == this.t2.yearMonth; },
 			});
-			console.table(expenses);
+			// console.table(incomes);
 			
 			this.chart.xAxis[0].setCategories(this.monthsShown, false);
-			this.chart.series[0].setData(_(incomes).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[1].setData(_(incomes).chain().where({'account': 'ING'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[2].setData(_(incomes).chain().where({'account': 'Iri KB'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[3].setData(_(incomes).chain().where({'account': 'Tomas KB'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[4].setData(_(expenses).chain().where({'account': 'Cash'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[5].setData(_(expenses).chain().where({'account': 'ING'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[6].setData(_(expenses).chain().where({'account': 'Iri KB'}).pluck('sum_amount').value(), false, false, false);
-			this.chart.series[7].setData(_(expenses).chain().where({'account': 'Tomas KB'}).pluck('sum_amount').value(), false, false, false);
+			this.chart.xAxis[0].setCategories(this.monthsShown, false);
+			var self = this;
+			_(fd.data.MCtotalIn).each(function(el, i) {
+				self.chart.series[i].setData(_(incomes).chain().where({'mainCategory': el.mainCategory}).pluck('sum_amount').value(), false, false, false);
+			});
 			this.chart.redraw();
 		}
     });
