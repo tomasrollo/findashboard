@@ -10,6 +10,7 @@ findashboard.Views = findashboard.Views || {};
 		template: JST['app/scripts/templates/abstractchart.ejs'],
 		
 		chart: null,
+		summaryTableView: null,
 		monthsShown: [],
 		seriesData: {},
 		tabName: '',
@@ -36,6 +37,10 @@ findashboard.Views = findashboard.Views || {};
 		},
 		render: function() {
 			this.$el.append(this.template());
+			this.summaryTableView = new fd.Views.SummarytableView({
+				el: this.$el.find('.summaryTable').get(0),
+			});
+			this.summaryTableView.render();
 		},
 		prepareData: function() {},
 		
@@ -147,7 +152,7 @@ findashboard.Views = findashboard.Views || {};
 			this.toggleSeries('hide');
 		},
 		
-		updateChartData: function(months) {}, // to be overridden by extending chart classes
+		updateChartData: function() {}, // to be overridden by extending chart classes
 		precomputeData: function() {}, // to be overridden by extending chart classes
 
 		pluckDataForAccount: function(data, account) {

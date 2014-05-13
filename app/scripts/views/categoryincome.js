@@ -59,6 +59,8 @@ findashboard.Views = findashboard.Views || {};
 				self.chart.series[i].setData(_(incomes).chain().where({'mainCategory': el.mainCategory}).pluck('sum_amount').value(), false, false, false);
 			});
 			this.chart.redraw();
+			
+			this.summaryTableView.updateTable(this.chart);
 		}
     });
 

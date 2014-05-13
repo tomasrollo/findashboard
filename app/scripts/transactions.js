@@ -292,5 +292,6 @@
 	
 	fd.util = {
 		pack: function(colName, ar) { return _(ar).map(function(el) { var o = {}; o[colName] = el; return o; }); },
+		CZKFormatter: Intl.NumberFormat('cs-cz'),
 	};
 })();
