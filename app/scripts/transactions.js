@@ -4,23 +4,22 @@
 	'use strict';
 
 	var dataLoader = {
+		baseURL: 'https://script.google.com/macros/s/AKfycbyWY2E74XSY_AIAQs9OolQaWHtoFbslCgUwgxx4PZBB8WoQzzU/exec?id=0AjYPHQBQOQ-sdHNFcmNWamMzTFR2Y1kxSUpLWDFNbGc&sheet=Transactions',
 		key: '0AjYPHQBQOQ-sdHNFcmNWamMzTFR2Y1kxSUpLWDFNbGc',
-		loadData: function(callback) {
-			console.log('Loading data from key='+this.key);
-			Tabletop.init({
-				key: this.key,
-				callback: callback,
-				simpleSheet: true,
-			});
+		sheet: 'Transactions',
+		loadData: function(success, fail) {
+			var url = this.baseURL+'?id='+this.key+'&sheet='+this.sheet;
+			console.log('Loading data from url='+url);
+			$.ajax({url: this.url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
 		},
 	};
 	
 	var mockDataLoader = {
-		mock: true,
-		loadData: function(callback) {
-			if (rawData === undefined) throw new Error('rawData is undefined');
-			var data = JSON.parse(rawData);
-			callback(data);
+		url: '/scripts/rawData2.js',
+		loadData: function(success, fail) {
+			var url = this.url;
+			console.log('Loading data from url='+url);
+			$.ajax({url: this.url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
 		},
 	};
 	
@@ -37,9 +36,9 @@
 		loadData: function() {
 			if (!this.dataLoader) throw new Error('Cannot load data, dataLoader is not set!');
 			this.trigger('load_start');
-			this.dataLoader.loadData(this.parseData);
+			this.dataLoader.loadData(this.parseData, this.loadFailure);
 		},
-		_parseData: function(transactions) {
+		_parseData: function(data) {
 			function getQuarter(month) {
 				if (month < 0 || month > 12) throw new Error('Month must be within 1..12 range, given: '+month);
 				if (month <= 3) return 'Q1';
@@ -60,25 +59,29 @@
 				return year + '/' + (month.length == 1 ? '0' : '') + month + '/' + (day.length == 1 ? '0' : '') + day;
 			}
 			console.log('parsing received transactions');
-			transactions = _(transactions).map(function(transaction) {
-				var dateChunks = transaction.date.split('.');
+			// console.log(data);
+			var transactions = _(data.Transactions).map(function(transaction) {
+				var td = new Date(transaction.date);
+				var year = td.getFullYear();
+				var month = td.getMonth()+1;
 				return {
 					account: transaction.account,
 					amount: parseFloat(transaction.amount),
 					category: transaction.category,
 					mainCategory: splitCategory(transaction.category, 0),
 					subCategory: splitCategory(transaction.category, 1),
-					date: formatDate(dateChunks[2], dateChunks[1], dateChunks[0]),
-					yearMonth: dateChunks[2] + '-' + (dateChunks[1].length == 1 ? '0' : '') + dateChunks[1],
-					yearQ: dateChunks[2] + '-' + getQuarter(parseInt(dateChunks[1])),
-					year: parseInt(dateChunks[2]),
+					date: td.getTime(),
+					yearMonth: year + '-' + (month.toString().length == 1 ? '0' : '') + month,
+					month: month,
+					quarter: getQuarter(month),
+					year: year,
 					description: transaction.description,
 					payee: transaction.payee,
 					transfers: transaction.transfers,
 				};
 			});
 			this.transactions = transactions;
-			
+
 			var monthsOfYear = [
 				{'month': '01'},
 				{'month': '02'},
@@ -114,12 +117,12 @@
 			this.months = _(this.months).pluck('yearMonth');
 			// list of all dates (days) between the minimum and maximum available dates
 			this.dates = [];
-			var ds = _(transactions).chain().pluck('date').map(function(d) { return new Date(d); }).value();
-			var minDate = _(ds).min();
-			var maxDate = _(ds).max();
+			var ds = _(transactions).pluck('date');
+			var minDate = new Date(_(ds).min());
+			var maxDate = new Date(_(ds).max());
 			var d = minDate;
 			while (d <= maxDate) {
-				this.dates.push({'date': formatDate(d.getFullYear(),d.getMonth()+1,d.getDate())});
+				this.dates.push({'date': d.getTime()});
 				d.setDate(d.getDate() + 1);
 			}
 			// the current yearMonth
@@ -282,13 +285,19 @@
 			this.dataAvailable = true;
 			this.trigger('load_end');
 		},
+		_loadFailure: function(error) {
+			console.log(error);
+			this.trigger('load_failure');
+		},
 	};
 	fd.data.parseData = fd.data._parseData.bind(fd.data);
+	fd.data.loadFailure = fd.data._loadFailure.bind(fd.data);
 	
 	_.extend(fd.data, Backbone.Events);
 
-	fd.data.setDataLoader(mockDataLoader);
-	// fd.data.setDataLoader(dataLoader);
+	// use mock data for local development
+	if (window.location.hostname === 'localhost') fd.data.setDataLoader(mockDataLoader);
+	else fd.data.setDataLoader(dataLoader);
 	
 	fd.util = {
 		pack: function(colName, ar) { return _(ar).map(function(el) { var o = {}; o[colName] = el; return o; }); },

@@ -55,7 +55,6 @@ findashboard.Views = findashboard.Views || {};
 			var tmpBal = _(fd.data.accounts).reduce(function(memo, account) { memo[account.account] = 0; return memo;}, {});
 			_(balances).each(function(pos, index, b) { // roll the balance over time (per each account)
 				b[index].sum_amount = tmpBal[pos.t1_account] = tmpBal[pos.t1_account] + pos.sum_amount;
-				b[index].t1_date = new Date(b[index].t1_date).getTime();
 			});
 			var totalNetWorth = SQLike.q({
 				select: ['t1_date','|sum|','sum_amount'],
@@ -63,6 +62,7 @@ findashboard.Views = findashboard.Views || {};
 				groupby: ['t1_date'],
 				orderby: ['t1_date'],
 			});
+			console.log(balances);
 
 			this.chart = new Highcharts.StockChart({
 				chart: {
