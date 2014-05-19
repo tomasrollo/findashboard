@@ -10,12 +10,14 @@ findashboard.Views = findashboard.Views || {};
 		template: JST['app/scripts/templates/accountbalance.ejs'],
 		
 		chart: null,
-
+        tabName: 'accountbalance',
+        
 		initialize: function() {
 			this.listenTo(fd.vent, 'navigation:tab_shown', this.show);
 		},
 		
-		show: function() {
+		show: function(tabName) {
+			if (tabName != '#'+this.tabName) return; // pass on tabs that are not mine
 			if (!this.chart) this.render();
 		},
 		
