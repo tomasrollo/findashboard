@@ -48,5 +48,12 @@ window.fd.vent.setupTrigger = function(name) {
 
 $(document).ready(function () {
 	'use strict';
+	if (window.location.search.indexOf('debug') !== -1) {
+		window.onerror = function(errorMsg, url, lineNumber) {
+			$('#debug pre').append('Error: '+errorMsg+', URL='+url+' line:'+lineNumber+'\n');
+		};
+	} else {
+		$('#navigation a[href="#debug"]').parent().hide();
+	}
 	findashboard.init();
 });
