@@ -7,3 +7,5 @@ app/bower_components
 test/bower_components/
 app/scripts/rawData.js
 app/scripts/rawData2.js
+deployToDropbox.sh
+getData.sh
