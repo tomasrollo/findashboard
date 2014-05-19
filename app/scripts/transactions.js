@@ -4,13 +4,14 @@
 	'use strict';
 
 	var dataLoader = {
-		baseURL: 'https://script.google.com/macros/s/AKfycbyWY2E74XSY_AIAQs9OolQaWHtoFbslCgUwgxx4PZBB8WoQzzU/exec?id=0AjYPHQBQOQ-sdHNFcmNWamMzTFR2Y1kxSUpLWDFNbGc&sheet=Transactions',
+		// fullURL: 'https://script.google.com/macros/s/AKfycbyWY2E74XSY_AIAQs9OolQaWHtoFbslCgUwgxx4PZBB8WoQzzU/exec?id=0AjYPHQBQOQ-sdHNFcmNWamMzTFR2Y1kxSUpLWDFNbGc&sheet=Transactions',
+		baseURL: 'https://script.google.com/macros/s/AKfycbyWY2E74XSY_AIAQs9OolQaWHtoFbslCgUwgxx4PZBB8WoQzzU/exec',
 		key: '0AjYPHQBQOQ-sdHNFcmNWamMzTFR2Y1kxSUpLWDFNbGc',
 		sheet: 'Transactions',
 		loadData: function(success, fail) {
 			var url = this.baseURL+'?id='+this.key+'&sheet='+this.sheet;
 			console.log('Loading data from url='+url);
-			$.ajax({url: this.url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
+			$.ajax({url: url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
 		},
 	};
 	
@@ -18,8 +19,8 @@
 		url: '/scripts/rawData2.js',
 		loadData: function(success, fail) {
 			var url = this.url;
-			console.log('Loading data from url='+url);
-			$.ajax({url: this.url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
+			console.log('Loading mock data from url='+url);
+			$.ajax({url: url, dataType: 'json'}).done(success).fail(fail).always(function() { console.log('Finished requests to load data from url='+url); });
 		},
 	};
 	
@@ -285,8 +286,10 @@
 			this.dataAvailable = true;
 			this.trigger('load_end');
 		},
-		_loadFailure: function(error) {
-			console.log(error);
+		_loadFailure: function(jqXHR, textStatus, errorThrown) {
+			fd.jqXHR = jqXHR;
+			console.log('Loading data failed with status '+textStatus);
+			console.log(errorThrown);
 			this.trigger('load_failure');
 		},
 	};
@@ -296,8 +299,8 @@
 	_.extend(fd.data, Backbone.Events);
 
 	// use mock data for local development
-	if (window.location.hostname === 'localhost') fd.data.setDataLoader(mockDataLoader);
-	else fd.data.setDataLoader(dataLoader);
+	fd.data.setDataLoader(window.location.hostname === 'localhost' ? mockDataLoader : dataLoader);
+	// fd.data.setDataLoader(dataLoader);
 	
 	fd.util = {
 		pack: function(colName, ar) { return _(ar).map(function(el) { var o = {}; o[colName] = el; return o; }); },

@@ -31,6 +31,9 @@ window.fd = window.findashboard = {
 		this.categoryincomeView = new this.Views.CategoryincomeView({
 			el: '#categoryincomeView'
 		});
+		this.pivotView = new this.Views.PivotView({
+			el: '#pivot'
+		});
 
 		fd.data.initialize();
 		fd.data.loadData();
