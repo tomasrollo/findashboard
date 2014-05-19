@@ -19,18 +19,6 @@ window.fd = window.findashboard = {
 		this.accountbalanceView = new this.Views.AccountbalanceView({
 			el: '#accountbalance'
 		});
-		this.incomeexpenseView = new this.Views.IncomeexpenseView({
-			el: '#incomeexpenseView'
-		});
-		this.paincomeexpenseView = new this.Views.PaincomeexpenseView({
-			el: '#paincomeexpenseView'
-		});
-		this.categoryspendView = new this.Views.CategoryspendView({
-			el: '#categoryspendView'
-		});
-		this.categoryincomeView = new this.Views.CategoryincomeView({
-			el: '#categoryincomeView'
-		});
 		this.pivotView = new this.Views.PivotView({
 			el: '#pivot'
 		});
