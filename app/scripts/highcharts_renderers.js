@@ -3,12 +3,12 @@ $.pivotUtilities.highChartRenderers = {
 	"Inverted Column Chart": makeChart('column', true),
 	"Stacked Column Chart": makeChart('column', false, true),
 	"Inverted Stacked Column Chart": makeChart('column', true, true),
-	"Line Chart": makeChart('line', false),
-	"Inverted Line Chart": makeChart('line', true),
-	"Area Chart": makeChart('area', false),
-	"Inverted Area Chart": makeChart('area', true),
-	"Stacked Area Chart": makeChart('area', false, true),
-	"Inverted Stacked Area Chart": makeChart('area', true, true),
+	"Line Chart": makeChart('spline', false),
+	"Inverted Line Chart": makeChart('spline', true),
+	"Area Chart": makeChart('areaspline', false),
+	"Inverted Area Chart": makeChart('areaspline', true),
+	"Stacked Area Chart": makeChart('areaspline', false, true),
+	"Inverted Stacked Area Chart": makeChart('areaspline', true, true),
 	"Pie Chart": getPieChart,
 };
 
