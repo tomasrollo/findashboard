@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "dependencies": {
     "jquery": "~1.9.0",
-    "underscore": "~1.4.3",
-    "backbone": "~1.0.0",
-    "modernizr": "~2.6.2",
+    "underscore": "^1.4.3",
+    "backbone": "^1.0.0",
+    "modernizr": "^2.6.2",
     "bootstrap": "~3.1.1",
     "highcharts.com": "~3.0.9",
-    "pivottable": "~1.1.1",
-    "jquery.ui.touch-punch.dk": "~0.3.3"
+    "pivottable": "^1.1.1",
+    "jquery.ui.touch-punch.dk": "~0.3.3",
+    "backbone.localstorage": "~1.1.7"
   },
   "devDependencies": {}
 }
