@@ -79,6 +79,7 @@
 					description: transaction.description,
 					payee: transaction.payee,
 					transfers: transaction.transfers,
+					type: type,
 				};
 			});
 			this.transactions = transactions;
