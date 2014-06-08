@@ -11,6 +11,17 @@ function clippingFormatter() {
 	return this.value.length > 10 ? this.value.substr(0,7) + "..." : this.value;
 }
 
+function computeChartWidth(type, stacked, pivotData) {
+	var columnWidth, margin;
+	
+	margin = 150;
+	
+	if (type === "column" && !stacked) columnWidth = Math.max(pivotData.flatRowKeys.length * 3 + 5, 50);
+	else columnWidth = 50;
+	
+	return pivotData.flatColKeys.length * columnWidth + margin;
+}
+
 function makeChart(type, stacked) {
 	return function(pivotData, rendererOptions) {
 		var resultEl = $("<div></div>");
@@ -22,8 +33,8 @@ function makeChart(type, stacked) {
 				plotBackgroundColor: null,
 				plotBorderWidth: null,
 				plotShadow: false,
-				width: $(window).width() / 1.4,
-				height: $(window).height(),
+				width: computeChartWidth(type, stacked, pivotData),
+				height: 600,
 			},
 			title: {
 				text: pivotData.rowAttrs.join(', ') + ' by ' + pivotData.colAttrs.join(', '),
