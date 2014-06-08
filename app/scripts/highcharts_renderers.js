@@ -1,9 +1,14 @@
 $.pivotUtilities.highChartRenderers = {
-	"Column Chart": makeChart('column'),
-	"Stacked Column Chart": makeChart('column',true),
-	"Line Chart": makeChart('line'),
-	"Area Chart": makeChart('area'),
-	"Stacked Area Chart": makeChart('area',true),
+	"Column Chart": makeChart('column', false),
+	"Inverted Column Chart": makeChart('column', true),
+	"Stacked Column Chart": makeChart('column', false, true),
+	"Inverted Stacked Column Chart": makeChart('column', true, true),
+	"Line Chart": makeChart('line', false),
+	"Inverted Line Chart": makeChart('line', true),
+	"Area Chart": makeChart('area', false),
+	"Inverted Area Chart": makeChart('area', true),
+	"Stacked Area Chart": makeChart('area', false, true),
+	"Inverted Stacked Area Chart": makeChart('area', true, true),
 	"Pie Chart": getPieChart,
 };
 
@@ -22,7 +27,7 @@ function computeChartWidth(type, stacked, pivotData) {
 	return pivotData.flatColKeys.length * columnWidth + margin;
 }
 
-function makeChart(type, stacked) {
+function makeChart(type, invertedYaxis, stacked) {
 	return function(pivotData, rendererOptions) {
 		var resultEl = $("<div></div>");
 		
@@ -54,7 +59,9 @@ function makeChart(type, stacked) {
 				},
 				labels: {
 					formatter: clippingFormatter,
-				}
+				},
+				reversed: invertedYaxis,
+				reversedStacks: false,
 			},
 			plotOptions: {
 				series: {
