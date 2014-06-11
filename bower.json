@@ -7,7 +7,7 @@
     "backbone": "^1.0.0",
     "modernizr": "^2.6.2",
     "bootstrap": "~3.1.1",
-    "highcharts.com": "~3.0.9",
+    "highcharts.com": "^4.0.0",
     "pivottable": "^1.1.1",
     "jquery.ui.touch-punch.dk": "~0.3.3",
     "backbone.localstorage": "~1.1.7"
