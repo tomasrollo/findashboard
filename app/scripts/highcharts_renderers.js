@@ -78,7 +78,8 @@ function makeChart(type, invertedYaxis, stacked) {
 		_(pivotData.getRowKeys()).each(function(rowKey) {
 			var flatName = rowKey.join(', ');
 			var seriesData = _(pivotData.getColKeys()).map(function(colKey) {
-				return pivotData.getAggregator(rowKey, colKey).value();
+				var result = pivotData.getAggregator(rowKey, colKey).value();
+				return result === null ? 0 : result;
 			});
 			chartOptions.series.push({'name': flatName, 'data': seriesData});
 		});
