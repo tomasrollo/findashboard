@@ -77,13 +77,13 @@ findashboard.Views = findashboard.Views || {};
 					var name = filterEl.find('h4:first').text();
 					// console.log(name);
 					name = rg.exec(name)[1];
-					// console.log(name);
+					// console.log("Processing axis: " + name);
 					filterEl.find('.pvtCheckContainer label').each(function(index, el2) {
-						var checked = $(el2).find('input[type=checkbox]').attr('checked') === 'checked';
+						var checked = $(el2).find('input[type=checkbox]').is(':checked');
 						if (!checked) {
 							if (!settings.exclusions[name]) settings.exclusions[name] = [];
 							var itemName = rg.exec($(el2).find('span').text())[1];
-							// console.log(itemName);
+							// console.log("Unchecked value: "+itemName);
 							settings.exclusions[name].push(itemName);
 						}
 					});
