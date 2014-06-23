@@ -300,7 +300,7 @@
 	_.extend(fd.data, Backbone.Events);
 
 	// use mock data for local development
-	fd.data.setDataLoader(window.location.hostname === 'localhost' ? mockDataLoader : dataLoader);
+	fd.data.setDataLoader(window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? mockDataLoader : dataLoader);
 	// fd.data.setDataLoader(dataLoader);
 	
 	fd.util = {
