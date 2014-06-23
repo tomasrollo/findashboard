@@ -41,9 +41,10 @@ findashboard.Views = findashboard.Views || {};
 		},
 		
 		show: function(tabName) {
-			if (tabName != '#'+this.tabName) return; // pass on tabs that are not mine
+			if (tabName != this.tabName) return; // pass on tabs that are not mine
 			if (!this.rendered) {
 				this.$el.html(this.template());
+				this.$("input[type=submit], a, button").button();
 				this.presets = new findashboard.Collections.PresetsCollection();
 				this.presets.fetch();
 				this.makePivot(this.defaultOptions);

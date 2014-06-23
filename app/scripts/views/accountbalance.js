@@ -17,7 +17,7 @@ findashboard.Views = findashboard.Views || {};
 		},
 		
 		show: function(tabName) {
-			if (tabName != '#'+this.tabName) return; // pass on tabs that are not mine
+			if (tabName != this.tabName) return; // pass on tabs that are not mine
 			if (!this.chart) this.render();
 		},
 		

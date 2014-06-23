@@ -8,15 +8,12 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>Financial dashboard</title>
 		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width">
+		<!--<meta name="viewport" content="width=device-width">-->
 		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-		<!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">-->
-		<!--<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.css">-->
 		<!-- build:css(.tmp) styles/main.css -->
-		<!-- the bootstrap files are placed into the styles directory as a workaround until I can find why the usemin is not concatting them into the dist styles.css file -->
+		<link rel="stylesheet" href="bower_components/jqueryui/themes/ui-lightness/jquery-ui.css">
+		<link rel="stylesheet" href="bower_components/jqueryui/themes/ui-lightness/jquery.ui.theme.css">
 		<link rel="stylesheet" href="bower_components/pivottable/dist/pivot.css">
-		<link rel="stylesheet" href="styles/bootstrap.css">
-		<link rel="stylesheet" href="styles/bootstrap-theme.css">
 		<link rel="stylesheet" href="styles/main.css">
 		<!-- endbuild -->
 		<!-- build:js scripts/vendor/modernizr.js -->
@@ -28,40 +25,33 @@
 			<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
 
-		<div class="container">
+		<div id="navigation">
 			<!-- Nav tabs -->
-			<ul class="nav nav-pills" id="navigation">
-				<li class="active"><a href="#home" data-toggle="pill">Home</a></li>
-				<li><a href="#accountbalance" data-toggle="pill">Accounts balance</a></li>
-				<li><a href="#pivot" data-toggle="pill">Pivot</a></li>
-				<li><a href="#debug" data-toggle="pill">Debug</a></li>
+			<ul>
+				<li><a href="#home">Home</a></li>
+				<li><a href="#accountbalance">Accounts balance</a></li>
+				<li><a href="#pivot">Pivot</a></li>
+				<li><a href="#debug">Debug</a></li>
 			</ul>
-			
 			<!-- Tab panes -->
-			<div class="tab-content">
-				<div class="tab-pane active" id="home">
-				</div>
-				<div class="tab-pane" id="accountbalance">
-				</div>
-				<div class="tab-pane" id="pivot">
-				</div>
-				<div class="tab-pane" id="debug">
-					<pre></pre>
-				</div>
+			<div id="home">
+			</div>
+			<div id="accountbalance">
+			</div>
+			<div id="pivot">
+			</div>
+			<div id="debug">
+				<pre></pre>
 			</div>
 		</div>
 
-		<!-- build:js scripts/vendor.js -->
+		<!-- build:js scripts/libraries.js -->
 		<script src="bower_components/jquery/jquery.js"></script>
 		<script src="bower_components/jqueryui/ui/jquery-ui.js"></script>
 		<script src="bower_components/jquery.ui.touch-punch.dk/jquery.ui.touch-punch.min.js"></script>
 		<script src="bower_components/underscore/underscore.js"></script>
 		<script src="bower_components/backbone/backbone.js"></script>
 		<script src="bower_components/backbone.localstorage/backbone.localStorage.js"></script>
-		<!-- endbuild -->
-
-		<!-- build:js scripts/plugins.js -->
-		<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 		<script src="bower_components/highcharts.com_fix/highcharts-all.js"></script>
 		<script src="bower_components/pivottable/dist/pivot.js"></script>
 		<!-- endbuild -->

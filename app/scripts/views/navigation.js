@@ -12,8 +12,10 @@ findashboard.Views = findashboard.Views || {};
 		initialize: function() {
 			var self = this;
 			this.on('all', fd.vent.setupTrigger('navigation'));
-			$('#navigation a[data-toggle="pill"]').on('shown.bs.tab', function (e) {
-				self.trigger('tab_shown', $(e.target).attr('href'));
+			$('#navigation').tabs({
+				beforeActivate: function(event, ui) {
+					self.trigger('tab_shown', ui.newPanel[0].id);
+				}
 			});
 		}
 
