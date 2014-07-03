@@ -6,7 +6,6 @@
     "underscore": "^1.4.3",
     "backbone": "^1.0.0",
     "modernizr": "^2.6.2",
-    "highcharts.com": "^3.0.0",
     "highcharts.com_fix": "highslide-software/highcharts-release",
     "pivottable": "^1.1.1",
     "jquery.ui.touch-punch.dk": "~0.3.3",
