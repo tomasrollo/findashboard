@@ -10,7 +10,8 @@
     "pivottable": "^1.1.1",
     "jquery.ui.touch-punch.dk": "~0.3.3",
     "backbone.localstorage": "~1.1.7",
-    "highcharts-regression": "phpepe/highcharts-regression"
+    "highcharts-regression": "phpepe/highcharts-regression",
+	"backfire": "firebase/backfire"
   },
   "devDependencies": {}
 }
