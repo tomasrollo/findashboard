@@ -21,7 +21,7 @@ findashboard.Views = findashboard.Views || {};
 					return $('<div class="pokusRenderer"></div>');
 				}
 			}),
-			aggregators: _($.pivotUtilities.aggregators).pick('intSum','count','sumAsFractionOfTotal','sumAsFractionOfRow','sumAsFractionOfCol'),
+			aggregators: _($.pivotUtilities.aggregators).pick('Integer Sum','Count','Sum as Fraction of Total','Sum as Fraction of Rows','Count as Fraction of Columns'),
 			cols: [],
 			rows: [],
 			vals: ['amount'],
