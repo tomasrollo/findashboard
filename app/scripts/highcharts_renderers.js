@@ -17,14 +17,15 @@ function clippingFormatter() {
 }
 
 function computeChartWidth(type, stacked, pivotData) {
+	console.log(pivotData);
 	var columnWidth, margin;
 	
 	margin = 150;
 	
-	if (type === "column" && !stacked) columnWidth = Math.max(pivotData.flatRowKeys.length * 3 + 5, 50);
+	if (type === "column" && !stacked) columnWidth = Math.max(_.flatten(pivotData.getRowKeys()).length * 3 + 5, 50);
 	else columnWidth = 50;
 	
-	return pivotData.flatColKeys.length * columnWidth + margin;
+	return Math.max(_.flatten(pivotData.getColKeys()).length * columnWidth + margin, 1000);
 }
 
 function makeChart(type, invertedYaxis, stacked) {
@@ -48,7 +49,7 @@ function makeChart(type, invertedYaxis, stacked) {
 				title: {
 					text: pivotData.colAttrs.join(', '),
 				},
-				categories: pivotData.flatColKeys,
+				categories: _.flatten(pivotData.getColKeys()),
 				labels: {
 					formatter: clippingFormatter,
 				}
