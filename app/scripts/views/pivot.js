@@ -26,7 +26,7 @@ findashboard.Views = findashboard.Views || {};
 			rows: [],
 			vals: ['amount'],
 			hiddenAttributes: ['date', 'description'],
-			derivedAttributes: {'I/E': function(record) { return record.amount >= 0 ? 'Income' : 'Expense'}},
+			derivedAttributes: {'I,E': function(record) { return record.amount >= 0 ? 'Income' : 'Expense'}},
 		},
 		
 		events: {
