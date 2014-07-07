@@ -8,9 +8,8 @@ findashboard.Collections = findashboard.Collections || {};
     findashboard.Collections.PresetsCollection = Backbone.Collection.extend({
 
         model: findashboard.Models.PresetsModel,
-		localStorage: new Backbone.LocalStorage('Presets'),
+		firebase: new Backbone.Firebase("https://radiant-fire-2965.firebaseio.com/findashboard/presets"),
 		comparator: 'name',
-		url: '/presets',
 
 		initialize: function() {
 			this.on('all', fd.vent.setupTrigger('presets'));
